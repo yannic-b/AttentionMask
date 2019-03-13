@@ -12,6 +12,12 @@ import argparse
 sys.path.append(os.path.abspath("caffe/python"))
 sys.path.append(os.path.abspath("python_layers"))
 sys.path.append(os.getcwd())
+
+# Segfault fix
+import matplotlib as mpl
+mpl.use('TkAgg')
+import matplotlib.pyplot as pltn
+
 import caffe
 import config
 
@@ -23,6 +29,7 @@ from alchemy.utils.load_config import load_config
 
 from utils import gen_masks_new, interp
 from skimage.segmentation import mark_boundaries
+from scipy.misc import imsave
 
 '''
     python image_demo.py gpu_id model input_image
@@ -110,5 +117,7 @@ if __name__ == '__main__':
         img_org = mark_boundaries(img_org,mask[:,:,0],color=color.tolist(),mode='thick')
 
     img_org = img_org.astype(np.uint8)
-    cv2.imshow('image', img_org)
-    cv2.waitKey(100000)
+    imsave(os.path.splitext(args.input_image)[0] + '-Result.jpg', img_org)
+
+    # cv2.imshow('image', img_org)
+    # cv2.waitKey(100000)
